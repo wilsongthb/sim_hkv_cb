@@ -65,14 +65,59 @@ EMPLOYEES_CONFIG = {
             "sunday": None
         },
         "attendance_probability": 0.85
-    }
+    },
+    "7": {
+        "name": "GIOVANNI ROSMERY VILCA FLOREZ",
+        "groupName": "Company",
+        "groupID": 1,
+        "work_schedule": {
+            "monday": (8, 9, 17, 18),
+            "tuesday": (8, 9, 17, 18),
+            "wednesday": (8, 9, 17, 18),
+            "thursday": (8, 9, 17, 18),
+            "friday": (8, 9, 17, 18),
+            "saturday": (10, 12, 14, 16),
+            "sunday": None
+        },
+        "attendance_probability": 0.85
+    },
+    "9": {
+        "name": "CHRIST KATHERYNE CHAVEZ CHIPANA",
+        "groupName": "Company",
+        "groupID": 1,
+        "work_schedule": {
+            "monday": (8, 9, 17, 18),
+            "tuesday": (8, 9, 17, 18),
+            "wednesday": (8, 9, 17, 18),
+            "thursday": (8, 9, 17, 18),
+            "friday": (8, 9, 17, 18),
+            "saturday": (10, 12, 14, 16),
+            "sunday": None
+        },
+        "attendance_probability": 0.85
+    },
+    "13": {
+        "name": "CHRIST KATHERYNE CHAVEZ CHIPANA",
+        "groupName": "Company",
+        "groupID": 1,
+        "work_schedule": {
+            "monday": (8, 9, 17, 20),
+            "tuesday": (8, 9, 17, 20),
+            "wednesday": (8, 9, 17, 20),
+            "thursday": (8, 9, 17, 20),
+            "friday": (8, 9, 17, 20),
+            "saturday": (8, 9, 17, 20),
+            "sunday": None
+        },
+        "attendance_probability": 0.99
+    },
 }
 
 def time_to_minutes(hour, minute):
     """Convierte hora y minuto a minutos desde medianoche"""
     return hour * 60 + minute
 
-def generate_random_times(schedule):
+def generate_random_times(schedule, ref_date=None, ref_end_date=None):
     """Genera horarios aleatorios basados en el rango configurado"""
     if not schedule:
         return []
@@ -93,12 +138,15 @@ def generate_random_times(schedule):
     times = [entrada, salida]
     
     # 30% de probabilidad de tener marcas de almuerzo
-    if random.random() < 0.3:
+    if random.random() < 0.99:
         almuerzo_salida = time_to_minutes(12, random.randint(0, 30))
         almuerzo_entrada = time_to_minutes(13, random.randint(0, 30))
         times.extend([almuerzo_salida, almuerzo_entrada])
-    
-    return sorted(times)
+    times = sorted(times)
+    if ref_date == ref_end_date:
+        # delete last item
+        times.pop()
+    return times
 
 def get_weekday_name(day_num):
     """Convierte número de día a nombre"""
@@ -126,7 +174,7 @@ def generate_attendance_data(start_date_str, end_date_str):
             time_list = []
             
             if schedule and random.random() < config["attendance_probability"]:
-                time_list = generate_random_times(schedule)
+                time_list = generate_random_times(schedule, current_date, end_date)
             
             detail_info.append({
                 "dateTime": current_date.strftime("%Y-%m-%d"),
