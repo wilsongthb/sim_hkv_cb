@@ -1,0 +1,9 @@
+services:
+  py:
+    build: .
+    working_dir: /var/www/html/
+    ports:
+      - "8035:8035"
+    volumes:
+      - ./:/var/www/html/:Z
+    command: "python ./app.py"
